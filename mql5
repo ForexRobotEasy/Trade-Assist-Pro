@@ -1,0 +1,146 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                           Trade Assist Pro.mq5   |
+//|                        Copyright 2021, Forex Robot Easy Team     |
+//|                                           forexroboteasy.com     |
+//+------------------------------------------------------------------+
+
+//+------------------------------------------------------------------+
+//| External parameters                                              |
+//+------------------------------------------------------------------+
+input double RiskPercentage = 1.0; // Risk percentage for position sizing
+input double SolidLots = 0.1; // Fixed lot size for position sizing
+input double CloseVolumePercentage = 50.0; // Percentage of position volume to close
+
+//+------------------------------------------------------------------+
+//| Global variables                                                 |
+//+------------------------------------------------------------------+
+int g_magicNumber = 123456; // Magic number for trade identification
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+    // Set risk level based on input parameters
+    double stopLoss = GetStopLoss();
+    double accountBalance = AccountInfoDouble(ACCOUNT_BALANCE);
+    double riskAmount = AccountInfoDouble(ACCOUNT_MARGIN) * RiskPercentage / 100.0;
+    double positionSize = riskAmount / stopLoss;
+    
+    // Open initial position
+    if(positionSize >= SolidLots)
+    {
+        if(positionSize < SolidLots)
+        {
+            positionSize = SolidLots;
+        }
+        
+        if(!OpenPosition(positionSize))
+        {
+            Print('Failed to open initial position');
+        }
+    }
+    
+    return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Check for order closure
+    if(IsAnyOrderOpen())
+    {
+        if(CloseAllOrders())
+        {
+            Print('All orders closed successfully');
+        }
+        else
+        {
+            Print('Failed to close all orders');
+        }
+    }
+    
+    // Check for partial closure
+    if(IsAnyPositionOpen())
+    {
+        double positionVolume = GetPositionVolume();
+        double closeVolume = positionVolume * CloseVolumePercentage / 100.0;
+        
+        if(closeVolume > 0.0)
+        {
+            if(!ClosePartialPosition(closeVolume))
+            {
+                Print('Failed to close partial position');
+            }
+        }
+    }
+}
+
+//+------------------------------------------------------------------+
+//| Helper functions                                                 |
+//+------------------------------------------------------------------+
+bool OpenPosition(double volume)
+{
+    bool result = false;
+    
+    // Place order logic
+    
+    return result;
+}
+
+bool CloseAllOrders()
+{
+    bool result = false;
+    
+    // Close all orders logic
+    
+    return result;
+}
+
+bool ClosePartialPosition(double volume)
+{
+    bool result = false;
+    
+    // Close partial position logic
+    
+    return result;
+}
+
+bool IsAnyOrderOpen()
+{
+    bool result = false;
+    
+    // Check if any order is open logic
+    
+    return result;
+}
+
+bool IsAnyPositionOpen()
+{
+    bool result = false;
+    
+    // Check if any position is open logic
+    
+    return result;
+}
+
+double GetStopLoss()
+{
+    double stopLoss = 0.0;
+    
+    // Calculate stop loss logic
+    
+    return stopLoss;
+}
+
+double GetPositionVolume()
+{
+    double positionVolume = 0.0;
+    
+    // Calculate position volume logic
+    
+    return positionVolume;
+}
